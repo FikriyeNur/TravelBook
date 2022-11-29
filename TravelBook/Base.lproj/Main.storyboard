@@ -56,6 +56,7 @@
                             <constraint firstItem="Jpp-r0-fke" firstAttribute="trailing" secondItem="7Y3-uD-K8s" secondAttribute="trailing" id="pJc-UM-pF5"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="GlO-8l-cS0"/>
                     <connections>
                         <outlet property="commentText" destination="7Y3-uD-K8s" id="dDn-1A-gJ9"/>
                         <outlet property="mapView" destination="1bv-gP-ezi" id="kuk-bg-BlL"/>
@@ -64,7 +65,34 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="33.644859813084111" y="69.97840172786178"/>
+            <point key="canvasLocation" x="1545" y="70"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Yfa-eS-AVO">
+            <objects>
+                <viewController id="a8Z-rM-9Yr" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ZPG-xx-90j">
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="493-ks-9h8">
+                                <rect key="frame" x="0.0" y="44" width="428" height="848"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="GEe-kI-sVL"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="GEe-kI-sVL" firstAttribute="trailing" secondItem="493-ks-9h8" secondAttribute="trailing" id="CF0-II-FqY"/>
+                            <constraint firstItem="493-ks-9h8" firstAttribute="top" secondItem="GEe-kI-sVL" secondAttribute="top" id="SmB-Uj-IQV"/>
+                            <constraint firstItem="GEe-kI-sVL" firstAttribute="bottom" secondItem="493-ks-9h8" secondAttribute="bottom" id="jsF-CA-alq"/>
+                            <constraint firstItem="493-ks-9h8" firstAttribute="leading" secondItem="GEe-kI-sVL" secondAttribute="leading" id="mlP-hC-e8a"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sjh-8b-YeP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="779" y="70"/>
         </scene>
     </scenes>
     <resources>
