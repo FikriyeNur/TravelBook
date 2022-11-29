@@ -14,6 +14,7 @@
 		4B45F12F29364C3F00E35060 /* TravelBook.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4B45F12D29364C3F00E35060 /* TravelBook.xcdatamodeld */; };
 		4B45F13129364C4000E35060 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B45F13029364C4000E35060 /* Assets.xcassets */; };
 		4B45F13429364C4000E35060 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B45F13229364C4000E35060 /* LaunchScreen.storyboard */; };
+		4BB554DE2936A925002C4DAA /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB554DD2936A925002C4DAA /* ListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		4B45F13029364C4000E35060 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B45F13329364C4000E35060 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4B45F13529364C4000E35060 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4BB554DD2936A925002C4DAA /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				4B45F13229364C4000E35060 /* LaunchScreen.storyboard */,
 				4B45F13529364C4000E35060 /* Info.plist */,
 				4B45F12D29364C3F00E35060 /* TravelBook.xcdatamodeld */,
+				4BB554DD2936A925002C4DAA /* ListViewController.swift */,
 			);
 			path = TravelBook;
 			sourceTree = "<group>";
@@ -144,6 +147,7 @@
 				4B45F12F29364C3F00E35060 /* TravelBook.xcdatamodeld in Sources */,
 				4B45F12929364C3F00E35060 /* ViewController.swift in Sources */,
 				4B45F12529364C3F00E35060 /* AppDelegate.swift in Sources */,
+				4BB554DE2936A925002C4DAA /* ListViewController.swift in Sources */,
 				4B45F12729364C3F00E35060 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
