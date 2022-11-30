@@ -25,8 +25,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     var annotationPlaceName = ""
     var annotationComment = ""
-    var annotationLatitude = Double()
-    var annotationLongitude = Double()
+    var annotationLatitude = 0.0
+    var annotationLongitude = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -135,6 +135,47 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
             let region = MKCoordinateRegion(center: location, span: span)
             mapView.setRegion(region, animated: true)
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation {
+            return nil
+        }
+        
+        let reuseId = "myAnnotation"
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+        
+        if pinView == nil {
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinView?.canShowCallout = true
+            pinView?.tintColor = UIColor.purple
+            
+            let button = UIButton(type: UIButton.ButtonType.detailDisclosure)
+            pinView?.rightCalloutAccessoryView = button
+        }
+        else {
+            pinView?.annotation = annotation
+        }
+        
+        return pinView
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if selectedPlace != "" && annotationLatitude != 0 && annotationLongitude != 0 {
+            let requestLocation = CLLocation(latitude: annotationLatitude, longitude: annotationLongitude)
+            CLGeocoder().reverseGeocodeLocation(requestLocation) { placemarks, error in
+                if let placeMark = placemarks {
+                    if placeMark.count > 0 {
+                        let newPlaceMark = MKPlacemark(placemark: placeMark[0])
+                        let item = MKMapItem(placemark: newPlaceMark)
+                        item.name = self.annotationPlaceName
+                        
+                        let launchOptions = [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving]
+                        item.openInMaps(launchOptions: launchOptions)
+                    }
+                }
+            }
         }
     }
 
