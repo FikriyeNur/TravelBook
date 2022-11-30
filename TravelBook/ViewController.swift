@@ -15,10 +15,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var nameText: UITextField!
     @IBOutlet weak var commentText: UITextField!
+    @IBOutlet weak var saveButton: UIButton!
     
     var locationManager = CLLocationManager()
     var choosenLatitude = Double()
     var choosenLongitude = Double()
+    var selectedPlace = ""
+    var selectedPlaceId : UUID?
+    
+    var annotationPlaceName = ""
+    var annotationComment = ""
+    var annotationLatitude = Double()
+    var annotationLongitude = Double()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +43,62 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         let keyboardRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         view.addGestureRecognizer(keyboardRecognizer)
+        
+        if selectedPlace != "" {
+            saveButton.isHidden = true
+            
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            let context = appDelegate.persistentContainer.viewContext
+            
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Places")
+            let id = selectedPlaceId!.uuidString
+            fetchRequest.predicate = NSPredicate(format: "id = %@", id)
+            fetchRequest.returnsObjectsAsFaults = false
+            
+            do {
+                let results = try context.fetch(fetchRequest)
+                if results.count > 0 {
+                    for result in results as! [NSManagedObject] {
+                        if let name = result.value(forKey: "placeName") as? String {
+                            annotationPlaceName = name
+                            
+                            if let comment = result.value(forKey: "comment") as? String {
+                                annotationComment = comment
+                                
+                                if let latitude = result.value(forKey: "latitude") as? Double {
+                                    annotationLatitude = latitude
+                                    
+                                    if let longitude = result.value(forKey: "longitude") as? Double {
+                                       annotationLongitude = longitude
+                                        
+                                        let annotation = MKPointAnnotation()
+                                        annotation.title = annotationPlaceName
+                                        annotation.subtitle = annotationComment
+                                        let coordinate = CLLocationCoordinate2D(latitude: annotationLatitude, longitude: annotationLongitude)
+                                        annotation.coordinate = coordinate
+                                        
+                                        mapView.addAnnotation(annotation)
+                                        nameText.text = annotationPlaceName
+                                        commentText.text = annotationComment
+                                        
+                                        locationManager.stopUpdatingLocation()
+                                        let span = MKCoordinateSpan(latitudeDelta: 0.04, longitudeDelta: 0.04)
+                                        let region = MKCoordinateRegion(center: coordinate, span: span)
+                                        mapView.setRegion(region, animated: true)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch {
+                alertMessage(title: "Error", message: "Selected location not found!")
+            }
+        }
+        else {
+            saveButton.isHidden = false
+        }
     }
 
     @objc func chooseLocation(gestureRegocnizer : UILongPressGestureRecognizer) {
@@ -46,9 +110,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 alertMessage(title: "Error", message: "Enter Name")
             }
             else if commentText.text == "" {
-                alertMessage(title: "Erro", message: "Enter Comment")
+                alertMessage(title: "Error", message: "Enter Comment")
             }
-            else{
+            else {
                 choosenLatitude = touchedCoordinates.latitude
                 choosenLongitude = touchedCoordinates.longitude
                 
@@ -66,11 +130,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = CLLocationCoordinate2D(latitude: locations[0].coordinate.latitude, longitude: locations[0].coordinate.longitude)
-        let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-        let region = MKCoordinateRegion(center: location, span: span)
-        mapView.setRegion(region, animated: true)
-        
+        if selectedPlace  == "" {
+            let location = CLLocationCoordinate2D(latitude: locations[0].coordinate.latitude, longitude: locations[0].coordinate.longitude)
+            let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+            let region = MKCoordinateRegion(center: location, span: span)
+            mapView.setRegion(region, animated: true)
+        }
     }
 
     @IBAction func saveLocation(_ sender: Any) {
@@ -100,7 +165,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
             do {
                 try context.save()
-                alertMessage(title: "Success", message: "Location successfully saved.")
+                NotificationCenter.default.post(name: NSNotification.Name("newPlace"), object: nil)
+                navigationController?.popViewController(animated: true)
             } catch {
                 alertMessage(title: "Error", message: "There's something wrong!")
             }
