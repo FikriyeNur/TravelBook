@@ -122,7 +122,6 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 }
                                 
                                 break
-                                
                             }
                         }
                     }

@@ -24,7 +24,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     var selectedPlaceId : UUID?
     
     var annotationPlaceName = ""
-    var annotationComment = ""
+    var annotationDescription = ""
     var annotationLatitude = 0.0
     var annotationLongitude = 0.0
     
@@ -62,8 +62,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                         if let name = result.value(forKey: "placeName") as? String {
                             annotationPlaceName = name
                             
-                            if let comment = result.value(forKey: "comment") as? String {
-                                annotationComment = comment
+                            if let description = result.value(forKey: "descriptions") as? String {
+                                annotationDescription = description
                                 
                                 if let latitude = result.value(forKey: "latitude") as? Double {
                                     annotationLatitude = latitude
@@ -73,13 +73,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                                         
                                         let annotation = MKPointAnnotation()
                                         annotation.title = annotationPlaceName
-                                        annotation.subtitle = annotationComment
+                                        annotation.subtitle = annotationDescription
                                         let coordinate = CLLocationCoordinate2D(latitude: annotationLatitude, longitude: annotationLongitude)
                                         annotation.coordinate = coordinate
                                         
                                         mapView.addAnnotation(annotation)
                                         nameText.text = annotationPlaceName
-                                        commentText.text = annotationComment
+                                        commentText.text = annotationDescription
                                         
                                         locationManager.stopUpdatingLocation()
                                         let span = MKCoordinateSpan(latitudeDelta: 0.04, longitudeDelta: 0.04)
@@ -93,7 +93,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 }
             }
             catch {
-                alertMessage(title: "Error", message: "Selected location not found!")
+                alertMessage(title: "Warning", message: "Selected location not found!")
             }
         }
         else {
@@ -107,10 +107,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             let touchedCoordinates = self.mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
             
             if nameText.text == "" {
-                alertMessage(title: "Error", message: "Enter Name")
+                alertMessage(title: "Warning", message: "Enter Name")
             }
             else if commentText.text == "" {
-                alertMessage(title: "Error", message: "Enter Comment")
+                alertMessage(title: "Warning", message: "Enter Description")
             }
             else {
                 choosenLatitude = touchedCoordinates.latitude
@@ -131,6 +131,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if selectedPlace  == "" {
+            locationManager.stopUpdatingLocation()
             let location = CLLocationCoordinate2D(latitude: locations[0].coordinate.latitude, longitude: locations[0].coordinate.longitude)
             let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
             let region = MKCoordinateRegion(center: location, span: span)
@@ -186,21 +187,21 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         let newPlace = NSEntityDescription.insertNewObject(forEntityName: "Places", into: context)
         
         if nameText.text == "" {
-            alertMessage(title: "Error", message: "Enter Location")
+            alertMessage(title: "Warning", message: "Enter Location")
         }
         else if commentText.text == ""  {
-            alertMessage(title: "Error", message: "Enter Comment")
+            alertMessage(title: "Warning", message: "Enter Description")
         }
         else if choosenLatitude == 0 {
-            alertMessage(title: "Error", message: "Choose Location")
+            alertMessage(title: "Warning", message: "Choose Location")
         }
         else if choosenLongitude == 0 {
-            alertMessage(title: "Error", message: "Choose Location")
+            alertMessage(title: "Warning", message: "Choose Location")
         }
         else {
             newPlace.setValue(UUID(), forKey: "id")
             newPlace.setValue(nameText.text, forKey: "placeName")
-            newPlace.setValue(commentText.text, forKey: "comment")
+            newPlace.setValue(commentText.text, forKey: "descriptions")
             newPlace.setValue(choosenLatitude, forKey: "latitude")
             newPlace.setValue(choosenLongitude, forKey: "longitude")
             
@@ -209,7 +210,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 NotificationCenter.default.post(name: NSNotification.Name("newPlace"), object: nil)
                 navigationController?.popViewController(animated: true)
             } catch {
-                alertMessage(title: "Error", message: "There's something wrong!")
+                alertMessage(title: "Warning", message: "There's something wrong!")
             }
         }
     }
